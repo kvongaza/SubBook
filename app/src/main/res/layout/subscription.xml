@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="c.kvongaza.subbook.SubscriptionActivity">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="name"
+        android:inputType="textCapWords"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <EditText
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="comment"
+        android:inputType="text"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="205dp" />
+
+    <EditText
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="date"
+        android:inputType="date"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="78dp" />
+
+    <EditText
+        android:id="@+id/amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="monthly cost"
+        android:inputType="numberDecimal"
+        tools:layout_editor_absoluteX="33dp"
+        tools:layout_editor_absoluteY="139dp" />
+</android.support.constraint.ConstraintLayout>
