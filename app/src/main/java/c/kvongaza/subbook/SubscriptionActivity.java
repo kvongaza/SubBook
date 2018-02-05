@@ -38,7 +38,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         dateText.setText(i.getStringExtra("date"));
 
         priceText = findViewById(R.id.subCost);
-        priceText.setText("$" + String.valueOf(i.getDoubleExtra("amount", 0.0)));
+        priceText.setText(String.valueOf(i.getDoubleExtra("amount", 0.0))); // removed "$" + ...
 
         commentText = findViewById(R.id.subComment);
         commentText.setText(i.getStringExtra("comment"));
@@ -57,12 +57,15 @@ public class SubscriptionActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        Intent i = new Intent();
         switch (item.getItemId()) {
             // delete not yet implemented
             case R.id.deleteSub:
+                i.putExtra("index", index);
+                setResult(Activity.RESULT_OK,i);
+                finish();
                 return true;
             case R.id.saveSub:
-                Intent i = new Intent();
                 i.putExtra("name", nameText.getText());
                 i.putExtra("date", dateText.getText());
                 i.putExtra("amount", Double.parseDouble(priceText.getText().toString().replace("$", "")));

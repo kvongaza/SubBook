@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,14 +18,15 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.ParsePosition;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Subscription> subscriptionList;
-
 
 
     @Override
@@ -33,13 +35,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         subscriptionList = new ArrayList<>();
-//        subscriptionList.add(new Subscription("Netflix", new Date(), 8.99, "test item in list));
+        subscriptionList.add(new Subscription("Netflix", new Date(), 8.99, "test item in list"));
 
         ArrayAdapter<Subscription> adapter = new MyListAdapter();
 
         ListView list = findViewById(R.id.mainListView);
         list.setAdapter(adapter);
-
         registerClickCallback();
     }
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 Subscription currentSub = subscriptionList.get(position);
                 Intent i = new Intent(getApplicationContext(), SubscriptionActivity.class);
                 i.putExtra("name", currentSub.getName() );
-                i.putExtra("date", new SimpleDateFormat("yyyy-MM-dd").format(currentSub.getDateStart()));
+                i.putExtra("date", new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA).format(currentSub.getDateStart()));
                 i.putExtra("amount", currentSub.getMonthlyCharge() );
                 i.putExtra("comment", currentSub.getComment() );
                 startActivityForResult(i, 101);
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.addSub:
                 Intent i = new Intent(getApplicationContext(), SubscriptionActivity.class);
                 i.putExtra("name", "" );
-                i.putExtra("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+                i.putExtra("date", new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA).format(new Date()));
                 i.putExtra("amount", 0 );
                 i.putExtra("comment", "" );
                 startActivityForResult(i, 100);
@@ -91,23 +92,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode,
                                     int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data); // the default shit
-        if(requestCode == 100){
+        super.onActivityResult(requestCode, resultCode, data); // the default shit
+
+        // new sub
+        if(requestCode == 100 && data != null){
+
+//            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aa"); // Alternate date formatter method.
+//            ParsePosition pp = new ParsePosition(0);
+//            formatter.parse("05/11/1994 05:30:10 AM", pp);
+//            Date date = formatter.parse("2018-02-05", new ParsePosition(0));
             subscriptionList.add(new Subscription(data.getStringExtra("name"),
 //                    new Date(), // test date
-                    new SimpleDateFormat("yyyy-MM-dd").parse(data.getStringExtra("date"), new ParsePosition(0)), // Something wrong with format?
+                    new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA).parse(data.getStringExtra("date"), new ParsePosition(0)), // Something wrong with format?
                     data.getDoubleExtra("amount", 0),
                     data.getStringExtra("comment")));
-//            subscriptionList.add(new Subscription("string", new Date(), 0.0, "what")); // demo
+            subscriptionList.add(new Subscription("string", new Date(), 0.0, "what")); // demo
         }
-        else if(requestCode == 101){
-            Subscription s = subscriptionList.get(data.getExtras().getInt("index"));
-            s.setName(data.getStringExtra("name"));
-            s.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(data.getExtras().getString("date"), new ParsePosition(0)));
-            s.setMonthlyCharge(data.getExtras().getDouble("price", 0));
-            s.setComment(data.getExtras().getString("comment"));
-
+        // editing sub
+        else if(requestCode == 101) {
+            String name = data.getStringExtra("name");
+            if (name == null) {
+                subscriptionList.remove(data.getExtras().getInt("index"));
+            } else {
+                Subscription s = subscriptionList.get(data.getExtras().getInt("index"));
+                s.setName(data.getStringExtra("name"));
+                s.setDate(new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA).parse(data.getExtras().getString("date"), new ParsePosition(0)));
+                s.setMonthlyCharge(data.getExtras().getDouble("amount", 0));
+                s.setComment(data.getExtras().getString("comment"));
             }
+        }
 
     }
 
@@ -131,10 +144,10 @@ public class MainActivity extends AppCompatActivity {
             nameText.setText(currentSub.getName());
 
             TextView dateText = itemView.findViewById(R.id.itemDate);
-            dateText.setText(currentSub.getDateStart().toString());
+            dateText.setText(new SimpleDateFormat ("yyyy-MM-dd", Locale.CANADA).format(currentSub.getDateStart()));
 
             TextView priceText = itemView.findViewById(R.id.itemPrice);
-            priceText.setText("$" + String.valueOf(currentSub.getMonthlyCharge()));
+            priceText.setText(String.valueOf(currentSub.getMonthlyCharge())); // removed "$" + ...
 
             return itemView;
         }
