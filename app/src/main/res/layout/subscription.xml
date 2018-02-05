@@ -1,48 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="c.kvongaza.subbook.SubscriptionActivity">
 
     <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
+        android:id="@+id/subName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="name"
+        android:hint="@string/name"
         android:inputType="textCapWords"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:maxLength="20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/comment"
-        android:layout_width="wrap_content"
+        android:id="@+id/subComment"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="comment"
+        android:hint="@string/comment"
         android:inputType="text"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="205dp" />
+        android:maxLength="30"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subCost" />
 
     <EditText
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
+        android:id="@+id/subDate"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="date"
+        android:hint="@string/date"
         android:inputType="date"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="78dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subName" />
 
     <EditText
-        android:id="@+id/amount"
-        android:layout_width="wrap_content"
+        android:id="@+id/subCost"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
-        android:hint="monthly cost"
+        android:hint="@string/monthly_cost"
         android:inputType="numberDecimal"
-        tools:layout_editor_absoluteX="33dp"
-        tools:layout_editor_absoluteY="139dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subDate" />
 </android.support.constraint.ConstraintLayout>

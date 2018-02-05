@@ -1,13 +1,23 @@
 package c.kvongaza.subbook;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,11 +27,38 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        subscriptionList = new ArrayList<>();
+//        subscriptionList.add(new Subscription("Netflix", new Date(), 8.99, "test item in list));
+
+        ArrayAdapter<Subscription> adapter = new MyListAdapter();
+
+        ListView list = findViewById(R.id.mainListView);
+        list.setAdapter(adapter);
+
+        registerClickCallback();
+    }
+
+
+    private void registerClickCallback() {
+        ListView list = findViewById(R.id.mainListView);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
+                Subscription currentSub = subscriptionList.get(position);
+                Intent i = new Intent(getApplicationContext(), SubscriptionActivity.class);
+                i.putExtra("name", currentSub.getName() );
+                i.putExtra("date", new SimpleDateFormat("yyyy-MM-dd").format(currentSub.getDateStart()));
+                i.putExtra("amount", currentSub.getMonthlyCharge() );
+                i.putExtra("comment", currentSub.getComment() );
+                startActivityForResult(i, 101);
+
+            }
+        });
     }
 
     @Override
@@ -40,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.addSub:
                 Intent i = new Intent(getApplicationContext(), SubscriptionActivity.class);
                 i.putExtra("name", "" );
-                i.putExtra("date", new Date() );
+                i.putExtra("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
                 i.putExtra("amount", 0 );
                 i.putExtra("comment", "" );
                 startActivityForResult(i, 100);
@@ -54,14 +91,56 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode,
                                     int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 100){
-            this.subscriptionList.add(new Subscription(data.getExtras().getString("name"),
-                    new Date(data.getExtras().getString("date")),
-                    data.getExtras().getDouble("amount"),
-                    data.getExtras().getString("comment")));
+//        super.onActivityResult(requestCode, resultCode, data); // the default shit
+        if(requestCode == 100){
+            subscriptionList.add(new Subscription(data.getStringExtra("name"),
+//                    new Date(), // test date
+                    new SimpleDateFormat("yyyy-MM-dd").parse(data.getStringExtra("date"), new ParsePosition(0)), // Something wrong with format?
+                    data.getDoubleExtra("amount", 0),
+                    data.getStringExtra("comment")));
+//            subscriptionList.add(new Subscription("string", new Date(), 0.0, "what")); // demo
+        }
+        else if(requestCode == 101){
+            Subscription s = subscriptionList.get(data.getExtras().getInt("index"));
+            s.setName(data.getStringExtra("name"));
+            s.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(data.getExtras().getString("date"), new ParsePosition(0)));
+            s.setMonthlyCharge(data.getExtras().getDouble("price", 0));
+            s.setComment(data.getExtras().getString("comment"));
 
+            }
+
+    }
+
+    // taken from https://www.youtube.com/watch?v=WRANgDgM2Zg&feature=youtu.be&t=24m24s
+    private class MyListAdapter extends ArrayAdapter<Subscription> {
+        public MyListAdapter() {
+            super(MainActivity.this, R.layout.subitem, subscriptionList);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            View itemView = convertView;
+            if (itemView == null) {
+                itemView = getLayoutInflater().inflate(R.layout.subitem, parent, false);
+            }
+
+            Subscription currentSub = subscriptionList.get(position);
+
+            TextView nameText = itemView.findViewById(R.id.itemName);
+            nameText.setText(currentSub.getName());
+
+            TextView dateText = itemView.findViewById(R.id.itemDate);
+            dateText.setText(currentSub.getDateStart().toString());
+
+            TextView priceText = itemView.findViewById(R.id.itemPrice);
+            priceText.setText("$" + String.valueOf(currentSub.getMonthlyCharge()));
+
+            return itemView;
         }
 
     }
+
+
+
 }

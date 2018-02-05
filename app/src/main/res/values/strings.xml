@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">Subbook</string>
+    <string name="app_name">kvongaza-Subbook</string>
     <string name="addSub">add</string>
     <string name="delete">delete</string>
     <string name="save">save</string>
+    <string name="name">name</string>
+    <string name="date">date</string>
+    <string name="comment">comment</string>
+    <string name="itemPrice">Price</string>
+    <string name="monthly_cost">monthly_cost</string>
 </resources>
